@@ -1,0 +1,12 @@
+{
+    "name": "mama/authlink",
+    "description": "Create and authenticate links that are only valid for certain amount of time",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Markku Marjoneva",
+            "email": "mama@iki.fi"
+        }
+    ],
+    "require": {}
+}
