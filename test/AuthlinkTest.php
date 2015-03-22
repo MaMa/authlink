@@ -36,4 +36,19 @@ class AuthlinkTest extends \PHPUnit_Framework_TestCase
     $this->assertFalse($authlink->validate($link));
   }
 
+  public function testChecksum()
+  {
+    $authlink1 = new Authlink(array('secret' => 'someSecret'));
+    $authlink2 = new Authlink(array('secret' => 'anotherSecret'));
+
+    $link1 = $authlink1->generate();
+    $link2 = $authlink2->generate();
+
+    $this->assertTrue($authlink1->validate($link1));
+    $this->assertFalse($authlink1->validate($link2));
+
+    $this->assertTrue($authlink2->validate($link2));
+    $this->assertFalse($authlink2->validate($link1));
+  }
+
 }
