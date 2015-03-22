@@ -39,7 +39,7 @@ class AuthlinkTest extends \PHPUnit_Framework_TestCase
   public function testChecksum()
   {
     $authlink1 = new Authlink(array('secret' => 'someSecret'));
-    $authlink2 = new Authlink(array('secret' => 'anotherSecret'));
+    $authlink2 = new Authlink('anotherSecret');
 
     $link1 = $authlink1->generate();
     $link2 = $authlink2->generate();

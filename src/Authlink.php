@@ -6,17 +6,22 @@ class Authlink
 {
   const CHECKSUM_DELIMITER = '|';
   const DATA_DELIMITER = ':';
+  const TIME_FORMAT = 'ymdHis';
 
   private $config = array(
-    'secret' => 'thisIsNotSecretSoChangeIt',
-    'algo' => 'sha256',
+    'secret'   => '#!#-This-Is-Not-Secret-So-Change-It-#!#',
+    'algo'     => 'sha256',
     'lifetime' => 3600, // 1 hour in seconds
   );
 
-  public function __construct(array $config = Null)
+  public function __construct($config = Null)
   {
-    if ($config) {
+    if (is_string($config) && !empty(trim($config))) {
+      $this->config['secret'] = trim($config);
+    } elseif (is_array($config)) {
       $this->config = array_merge($this->config, $config);
+    } elseif (!is_null($config)) {
+      throw new \InvalidArgumentException('Constructor argument must be secret string or array of settings');
     }
   }
 
@@ -57,7 +62,7 @@ class Authlink
   private function getTimestamp($lifetime = 0)
   {
     $lifetime = $lifetime < 0 ? 0 : intval($lifetime); //Cannot be negative
-    return date('YmdHis', time() + $lifetime);
+    return date(self::TIME_FORMAT, time() + $lifetime);
   }
 
   private function calculateHmac($data)
