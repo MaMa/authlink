@@ -13,23 +13,33 @@ and authenticator will check validity of link before allowing access.
 
 ## Usage
 
-### Generator
+### Generate link
 
-```
-$generator = new mama\authlink\Generator();
+```php
+<?php
+$authlink = new Mama\Authlink\Authlink();
 
 $lifetime = 60; //seconds
-$authlink = $generator->generate($lifetime);
+$authlink = $authlink->generate($lifetime);
 ```
 
-### Validator
+### Validate link
 
-```
-$validator = new mama\authlink\Validator();
+```php
+<?php
+$authlink = new Mama\Authlink\Authlink();
 
-if ($validator->validate($authlink)) {
+if ($authlink->validate($authlink)) {
   // VALID
 } else {
   // INVALID
 }
+```
+
+## Testing
+
+Run tests with command
+
+```bash
+vendor/bin/phpunit -c test/
 ```
