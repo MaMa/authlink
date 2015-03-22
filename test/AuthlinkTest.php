@@ -79,6 +79,12 @@ class AuthlinkTest extends \PHPUnit_Framework_TestCase
     $this->assertTrue($authlink->validate($link2));
   }
 
+  public function testUrlEncodeSafe()
+  {
+    $link = (new Authlink())->generate();
+    $this->assertTrue($link === urlencode($link));
+  }
+
   private function splitLink($link)
   {
     list($data, $hmac) = explode(Authlink::CHECKSUM_DELIMITER, $link);

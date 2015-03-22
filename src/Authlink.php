@@ -4,8 +4,8 @@ namespace Mama\Authlink;
 
 class Authlink
 {
-  const CHECKSUM_DELIMITER = '|';
-  const DATA_DELIMITER = ':';
+  const CHECKSUM_DELIMITER = '-';
+  const DATA_DELIMITER = '_';
   const TIME_FORMAT = 'ymdHis';
 
   private $config = array(
@@ -67,12 +67,12 @@ class Authlink
 
   private function calculateHmac($data)
   {
-    return self::base64url_encode(
+    return self::baseUrlEncode(
       hash_hmac($this->config['algo'], $data, $this->config['secret'], true));
   }
 
-  private static function base64url_encode($data) {
-    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+  private static function baseUrlEncode($data) {
+    return rtrim(strtr(base64_encode($data), '+/', 'pS'), '=');
   }
 
 }

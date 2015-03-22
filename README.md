@@ -13,26 +13,37 @@ and authenticator will check validity of link before allowing access.
 
 ## Usage
 
+Constructor takes parameters as either secret string:
+```php
+<?php
+$Authlink = new Authlink('SharedSecretString')
+```
+
 ### Generate link
 
 ```php
 <?php
-$authlink = new Mama\Authlink\Authlink();
+$settings = array(
+  'secret' => 'MySuperSecretString',
+  'lifetime' => 60 // 60 seconds = 1 minute
+);
 
-$lifetime = 60; //seconds
-$authlink = $authlink->generate($lifetime);
+$Authlink = new Mama\Authlink\Authlink($settings);
+
+$link = $Authlink->generate();
 ```
 
 ### Validate link
 
 ```php
 <?php
-$authlink = new Mama\Authlink\Authlink();
+$secret = 'MySuperSecretString';
+$Authlink = new Mama\Authlink\Authlink($secret);
 
-if ($authlink->validate($authlink)) {
-  // VALID
+if ($Authlink->validate($link)) {
+  // Link is valid
 } else {
-  // INVALID
+  // Link is invalid or expired
 }
 ```
 
