@@ -25,13 +25,13 @@ class AuthlinkTest extends \PHPUnit_Framework_TestCase
 
   public function testExpiredLink()
   {
-    $authlink = new Authlink();
+    $authlink = new Authlink(array('lifetime' => 1));
 
-    $link = $authlink->generate(1);
+    $link = $authlink->generate();
 
     $this->assertTrue($authlink->validate($link));
 
-    sleep(1); //wait to expire
+    sleep(2); //wait to expire
 
     $this->assertFalse($authlink->validate($link));
   }
@@ -49,6 +49,45 @@ class AuthlinkTest extends \PHPUnit_Framework_TestCase
 
     $this->assertTrue($authlink2->validate($link2));
     $this->assertFalse($authlink2->validate($link1));
+  }
+
+  public function testWithExtra()
+  {
+    $authlink = new Authlink();
+
+    $extra = 'Some text';
+
+    $link = $authlink->generate($extra);
+
+    $this->assertTrue($authlink->validate($link));
+  }
+
+  public function testChecksumWithExtra()
+  {
+    $authlink = new Authlink();
+
+    $link1 = $authlink->generate('someExtra');
+    $link2 = $authlink->generate('extraSome');
+
+    $parts1 = $this->splitLink($link1);
+    $parts2 = $this->splitLink($link2);
+
+    $this->assertTrue($parts1['time'] === $parts2['time']);
+    $this->assertFalse($parts1['hmac'] === $parts2['hmac']);
+
+    $this->assertTrue($authlink->validate($link1));
+    $this->assertTrue($authlink->validate($link2));
+  }
+
+  private function splitLink($link)
+  {
+    list($data, $hmac) = explode(Authlink::CHECKSUM_DELIMITER, $link);
+    list($time, $extra) = explode(Authlink::DATA_DELIMITER, $data);
+    return array(
+      'time' => $time,
+      'extra' => $extra,
+      'hmac' => $hmac
+    );
   }
 
 }
