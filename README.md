@@ -49,6 +49,8 @@ if ($Authlink->validate($link)) {
 
 ## Testing
 
+Download [Composer](https://getcomposer.org/) and run `composer install`
+
 Run tests with command
 
 ```bash
