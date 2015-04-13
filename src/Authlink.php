@@ -7,9 +7,12 @@ class Authlink
   const CHECKSUM_DELIMITER = '-';
   const DATA_DELIMITER = '_';
   const TIME_FORMAT = 'ymdHis';
+  const SEED = 'jCHM3ozmTtXzTkoEWFFCp1oLqjaZaEWfKTIlH6VVnpZ7H72a8OEzehwVgYIs';
+
+  private $key = Null;
 
   private $config = array(
-    'secret'   => '#!#-This-Is-Not-Secret-So-Change-It-#!#',
+    'secret'   => '#-Shared-Secret-Can-Be-Here-Or-Given-As-Parameter-#',
     'algo'     => 'sha256',
     'lifetime' => 3600, // 1 hour in seconds
   );
@@ -50,6 +53,19 @@ class Authlink
     return true;
   }
 
+  private function generateKey($secret)
+  {
+    $this->key = hash($this->config['algo'], self::SEED . $secret . self::SEED);
+  }
+
+  private function getKey()
+  {
+    if (!$this->key) {
+      $this->generateKey($this->config['secret']);
+    }
+    return $this->key;
+  }
+
   private function generateData($extra, $lifetime)
   {
     $extra = urlencode(trim(strval($extra)));
@@ -68,7 +84,7 @@ class Authlink
   private function calculateHmac($data)
   {
     return self::baseUrlEncode(
-      hash_hmac($this->config['algo'], $data, $this->config['secret'], true));
+      hash_hmac($this->config['algo'], $data, $this->getKey(), true));
   }
 
   private static function baseUrlEncode($data) {
