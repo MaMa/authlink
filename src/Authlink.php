@@ -68,11 +68,15 @@ class Authlink
 
   private function generateData($extra, $lifetime)
   {
-    $extra = urlencode(trim(strval($extra)));
     $lifetime = $lifetime ?: $this->config['lifetime'];
     $timestamp = $this->getTimestamp($lifetime);
 
-    return $timestamp . self::DATA_DELIMITER . $extra;
+    return $timestamp . self::DATA_DELIMITER . $this->sanitizeExtra($extra);
+  }
+
+  private function sanitizeExtra($extra)
+  {
+    return preg_replace('/[^a-zA-Z0-9]/','', trim($extra));
   }
 
   private function getTimestamp($lifetime = 0)

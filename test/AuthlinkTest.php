@@ -79,6 +79,16 @@ class AuthlinkTest extends \PHPUnit_Framework_TestCase
     $this->assertTrue($authlink->validate($link2));
   }
 
+  public function testMakeLink()
+  {
+    $Authlink = new Authlink(array(
+      'secret' => 'MySuperSecretString',
+      'lifetime' => 36000
+    ));
+    $link = $Authlink->generate(' Ihme töttöröö %!#""');
+    $this->assertTrue($Authlink->validate($link));
+  }
+
   public function testUrlEncodeSafe()
   {
     $link = (new Authlink())->generate();
