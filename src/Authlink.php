@@ -19,7 +19,7 @@ class Authlink
 
   public function __construct($config = Null)
   {
-    if (is_string($config) && !empty(trim($config))) {
+    if (is_string($config) && trim($config)) {
       $this->config['secret'] = trim($config);
     } elseif (is_array($config)) {
       $this->config = array_merge($this->config, $config);
